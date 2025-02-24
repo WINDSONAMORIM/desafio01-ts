@@ -1,42 +1,55 @@
 export abstract class DioAccount {
-  private name: string
-  private readonly accountNumber: number
-  balance: number = 0
-  private status: boolean = true
+  private readonly name: string;
+  private readonly accountNumber: number;
+  private balance: number = 0;
+  private status: boolean = true;
 
-  constructor(name: string, accountNumber: number){
-    this.name = name
-    this.accountNumber = accountNumber
-  }
-
-  setName = (name: string): void => {
-    this.name = name
-    console.log('Nome alterado com sucesso!')
+  constructor(name: string, accountNumber: number) {
+    this.name = name;
+    this.accountNumber = accountNumber;
   }
 
   getName = (): string => {
-    return this.name
+    return this.name;
+  };
+
+  setBalance = (value: number): void => {
+    this.balance = value;
   }
 
-  deposit = (): void => {
-    if(this.validateStatus()){
-      console.log('Voce depositou')
+  getBalance = (): number => {
+    return this.balance;
+  }
+
+  deposit = (value: number): void => {
+    if (this.validateStatus()) {
+      this.balance += value;
+      console.log(`Voce depositou R$${value} e seu saldo atual é de R$${this.balance}`);
     }
-  }
+  };
 
-  withdraw = (): void => {
-    console.log('Voce sacou')
-  }
+  withdraw = (value: number): void => {
+    if (this.validateStatus()) {
+      if (this.validateBalance(value)) {
+        this.balance -= value;
+        console.log(`Você sacou R$${value} e seu saldo atual é de R$${this.balance}`);
+      }
+    }
+  };
 
-  getBalance = (): void => {
-    console.log(this.balance)
-  }
-
-  private validateStatus = (): boolean => {
+  protected validateStatus = (): boolean => {
     if (this.status) {
-      return this.status
+      return this.status;
     }
 
-    throw new Error('Conta inválida')
-  }
+    throw new Error("Conta inválida");
+  };
+
+  protected validateBalance = (value: number): boolean => {
+    if (value < this.balance) {
+      return true;
+    }
+
+    throw new Error("Sem Saldo na conta");
+  };
 }
